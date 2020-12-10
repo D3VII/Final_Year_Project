@@ -1,0 +1,71 @@
+{% extends 'doctor.html' %}
+{% load staticfiles %} 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script type="text/javascript" src="{% static 'js/patient.js' %}"></script>
+<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+{% block hide %}{% endblock %}
+{% block patient_medication %}
+<div class="body">
+    <h5><b>{{ request.user.first_name }} {{ request.user.last_name }}</b></h5>
+    <h6><b>{% for pres in prescriptions %}{{ pres.date }} {% endfor %}</b></h6>
+    <br>
+     {% for doctor_detail in patient_and_doctor_name %}
+       <h5>Doctor Name: &nbsp; <b>{{ doctor_detail.assigned_doctor }} </b></h5>
+      
+    {% endfor %}
+    {% for patient_detail in patient_and_doctor_name %}
+       <h5>Patient Name: &nbsp; <b>{{ patient_detail.first_name }}  {{ patient_detail.last_name }}</b></h5>
+      
+    {% endfor %}
+    <br>
+    <h3><b>MEDICINES</b></h3>
+        <div class="input_fields_wrap w3-hide-small">
+        <div style="display:flex;">
+        <span  style="flex:1;"><b style="margin-left:25px;">MEDICINE</b></span>
+        <span  style="flex:1;"><b style="margin-left:77px;">M</b><b style="margin-left:90px;">D</b><b style="margin-left:90px;">N</b></span>
+        </div>
+        </div>
+    {% for medicines in medication %}
+        
+        <div class="medicine-detail" style="display:flex; margin-top: 10px;">
+            <span  style="flex:1;"><input class="w3-input w3-border medicine" type="text" value="{{medicines.medicine}}" name="medicine" name="mytext[]" style="margin-left:25px; width: 100%;" readonly ></span>
+            <span  style="flex:1;">
+            {% if medicines.morning_intake == False %}
+            <input  name="checkbox1[]" type="checkbox" style="margin-left:77px;" onclick="return false;" onkeydown="return false;" >
+            {% else %}
+            <input  name="checkbox1[]" type="checkbox" checked="True" style="margin-left:77px;" onclick="return false;" onkeydown="return false;" >
+            {% endif %}
+            {% if medicines.afternoon_intake == False %}
+            <input  name="checkbox2[]" type="checkbox" style="margin-left:77px;" onclick="return false;" onkeydown="return false;" >
+            {% else %}
+            <input  name="checkbox2[]" type="checkbox" checked="True" style="margin-left:77px;" onclick="return false;" onkeydown="return false;" >
+            {% endif %}
+            {% if medicines.evening_intake == False %}
+            <input  name="checkbox3[]" type="checkbox" style="margin-left:77px;" onclick="return false;" onkeydown="return false;" >
+            {% else %}
+            <input  name="checkbox3[]" type="checkbox" checked="True" style="margin-left:77px;" onclick="return false;" onkeydown="return false;" >
+            {% endif %}
+        </div>
+        
+    {% endfor%}
+    <form action = "{{ request.path }}/is_done" method="POST">
+       {% csrf_token %}
+       <input type="submit" value="Done">
+    </form>
+</div>
+<script>
+
+jQuery(document).on('click', function(e){
+      if(e.target.type == 'checkbox') {
+          var el = jQuery(e.target);
+          if(el.prop('readonly')) {
+              e.preventDefault();
+          }
+      }
+});
+
+input[type=checkbox][readonly] {
+    cursor: not-allowed;
+}
+</script>
+{% endblock %}

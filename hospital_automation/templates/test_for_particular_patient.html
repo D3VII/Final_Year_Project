@@ -1,0 +1,42 @@
+{% extends 'doctor.html' %}
+{% load staticfiles %} 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script type="text/javascript" src="{% static 'js/patient.js' %}"></script>
+<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+{% block hide %}{% endblock %}
+{% block patient_test %}
+<div class="body">
+    <br>
+     {% for doctor_detail in patient_and_doctor_name %}
+       <h5>Doctor Name: &nbsp; <b>{{ doctor_detail.assigned_doctor }} </b></h5>
+      
+    {% endfor %}
+    {% for patient_detail in patient_and_doctor_name %}
+       <h5>Patient Name: &nbsp; <b>{{ patient_detail.first_name }}  {{ patient_detail.last_name }}</b></h5>
+      
+    {% endfor %}
+    <br>
+    {% for test in test_for_patient %}
+        <h5>Test Name: &nbsp;<b>{{ test.tests }}</b></h5>
+    {% endfor%}
+    <form action = "{{ request.path }}/patient_is_done_with_test" method="POST">
+       {% csrf_token %}
+       <input type="submit" value="Done">
+    </form>
+</div>
+<script>
+
+jQuery(document).on('click', function(e){
+      if(e.target.type == 'checkbox') {
+          var el = jQuery(e.target);
+          if(el.prop('readonly')) {
+              e.preventDefault();
+          }
+      }
+});
+
+input[type=checkbox][readonly] {
+    cursor: not-allowed;
+}
+</script>
+{% endblock %}

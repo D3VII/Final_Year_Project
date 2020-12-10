@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<title>Patient Registration</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<!-- bootstrap-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+ <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+ <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+ <script src="https://code.jquery.com/jquery-migrate-3.0.0.min.js"></script>
+
+<style>
+body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
+.mySlides {display:none}
+</style>
+<body class="w3-content w3-border-left w3-border-right">
+
+
+<!-- Sidebar/menu -->
+<nav class="w3-sidebar w3-light-grey w3-collapse w3-top" style="z-index:3;width:260px" id="mySidebar">
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <div class="w3-container w3-display-container w3-padding-16">
+    <a href="/patient_records"  style="text-decoration:none"><p><button class="w3-button w3-block w3-teal w3-left-align" type="submit"><i class="fa w3-margin-right" href="#"></i>View existing Patient</button></p></a>
+      <a href="helpers"  style="text-decoration:none"><p><button class="w3-button w3-block w3-teal w3-left-align" type="submit"><i class="fa w3-margin-right" href="{% url 'helpers' %}"></i>Helpers</button></p></a>
+      <a href="doctor_details"  style="text-decoration:none"><p><button class="w3-button w3-block w3-teal w3-left-align" type="submit"><i class="fa w3-margin-right" href="{% url 'doctor_details' %}"></i>Doctors on duty</button></p></a>
+      <a href="statistics"  style="text-decoration:none"><p><button class="w3-button w3-block w3-teal w3-left-align" type="submit"><i class="fa w3-margin-right" href="#"></i>Statistics</button></p></a>
+      {% if user.is_authenticated %}
+          <p><a href="accounts/logout" style="text-decoration: none;"><button class="w3-button w3-block w3-teal w3-left-align" type="submit"><i class="fa w3-margin-right"></i>Logout</button></a></p>
+        {% endif %}
+    </form>
+  </div>
+</nav>
+
+<!-- Top menu on small screens -->
+<header class="w3-bar w3-top w3-hide-large w3-teal w3-xlarge">
+  <span class="w3-bar-item" style="float:center"><a href="/" style="text-decoration: none;">MountBlue Hospital</a></span>
+  <a href="javascript:void(0)" class="w3-right w3-bar-item w3-button" onclick="w3_open()"><i class="fa fa-bars"></i></a>
+</header>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+<!-- !PAGE CONTENT! -->
+<div class="w3-main w3-white" style="margin-left:260px">
+
+  <!-- Push down content on small screens -->
+  <div class="w3-hide-large" style="margin-top:80px"></div>
+
+  <!-- Slideshow Header -->
+  <div class="w3-bar w3-teal w3-hide-small w3-xlarge" >
+      <h2 class="w3-text-white" style="text-align:center"><a href="/" style="text-decoration: none;">MountBlue Hospital</a></h2>
+    </div>
+
+
+<div id="container" class="section grey lighten-3" style="padding: 5px; margin-top:40px; margin-left: 30px; box-shadow: 10px 10px 5px gray"></div>
+</div>
+<script src="https://code.highcharts.com/highcharts.src.js"></script>
+<script>
+  Highcharts.chart('container', {
+      chart: {
+          type: 'column'
+      },
+      title: {
+          text: 'Patient seen by doctor'
+      },
+      xAxis: {
+          title: {
+              text: 'doctors'
+          },
+          categories: [{% for season in doctors_seen_details %}'{{ season }}'{% if not forloop.last %}, {% endif %}{% endfor %}],
+      },
+      yAxis: {
+
+          title: {
+              text: 'Number of patient seen'
+          }
+      },
+      series: [{
+          name: '',
+          data: [
+            {% for key,value in doctors_seen_details.items %}{{ value }}{% if not forloop.last %}, {% endif %}{% endfor %}
+          ]
+      }]
+  });
+</script>
+</body>
+</html>

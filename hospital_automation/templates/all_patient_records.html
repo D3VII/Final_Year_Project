@@ -1,0 +1,21 @@
+{% extends 'patient_records.html' %}
+{% load staticfiles %} 
+<script type="text/javascript" src="{% static 'js/patient.js' %}"></script>
+{% block hide %}{% endblock %}
+{% block all_patient_record_block %}
+<div id="board" class="section grey lighten-3" style="height: 68vh; padding: 5px; overflow-y: scroll">
+    {% for patient in patients %}
+    <a href="{{ patient.id }}">
+    <div class="card-container">
+
+            <div id="{{ patient.id }}" class="card">
+             <div class="container">
+              <b> {{patient.first_name}} {{patient.last_name}} </b>
+            </div>
+          </div>
+       </div>
+       </a>
+   {% endfor %}
+</div>
+
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends 'doctor.html' %}
+{% load staticfiles %} 
+<script type="text/javascript" src="{% static 'js/patient.js' %}"></script>
+{% block hide %}{% endblock %}
+{% block incoming_patient_for_test %}
+    {% for patient in incoming_patient %}
+     <a href="/test/{{ patient.id }}">
+     <div class="card-container">
+           <div id="{{ patient.id }}" class="card">
+              <div class="container">
+                 {{patient.first_name}} {{patient.last_name}}
+              </div>
+           </div>
+        </div>
+      </a>
+    {% endfor %}
+<script>
+$(function () {
+    setInterval(incoming_patient_for_test,1000)
+})
+</script>
+{% endblock %}

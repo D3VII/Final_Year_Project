@@ -1,0 +1,169 @@
+{% extends 'doctor.html' %}
+{% load staticfiles %} 
+<script type="text/javascript" src="{% static 'js/patient.js' %}"></script>
+<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+{% block hide %}{% endblock %}
+{% block patient_prescriptions %}
+
+<div class="body">
+    <h5><b>{{ request.user.first_name }} {{ request.user.last_name }}</b></h5>
+    <h6><b>{% for pres in prescriptions %}{{ pres.date }} {% endfor %}</b></h6>
+    <br>
+    {% for patient_detail in prescriptions %}
+      
+        <h5>Patien Name: &nbsp; <b>{{ patient_detail.first_name }}  {{ patient_detail.last_name }}</b></h5>
+        <h6><b>{{ patient_detail.phone_number }}</b></h6>
+      
+    {% endfor %}
+    <br>
+    <h3><b>Diagnosis</b></h3>
+    <form action="{{ request.path }}/send_prescriptions" method="POST">
+    {% csrf_token %}
+    <div style="display:flex">
+      <div class = "diagnosis" style="flex:2">
+        <textarea name="diagnosis" class="w3-input w3-border" rows="10" cols="50"></textarea>
+      </div>
+      <div class = "aditional-diagnosis" style="flex:1; display:flex;">
+        <div style="flex:1">
+          <p style="margin: 10px;">BP:</p>
+          <p style="margin: 10px;">Weight:</p>
+          <p style="margin: 10px; ">Sugar:</p>
+        </div>  
+        <div style="flex:1">
+            <input  name="bp" class="w3-input w3-border" style="width:80px; height:30px; margin: 5px;"type = "text">
+            <input  name="weight" class="w3-input w3-border" style="width:80px; height:30px; margin: 5px;" type = "text">
+            <input  name="sugar" class="w3-input w3-border" style="width:80px; height:30px; margin: 5px;" type = "text">
+          </div>  
+      </div>
+    </div>
+    
+<!-- for small screen-->
+<!-- {% csrf_token %}
+<div class="w3-hide-large">
+  <div class = "diagnosis">
+    <textarea name="diagnosis" class="w3-input w3-border" rows="10" cols="50"></textarea>
+  </div>
+  <div class = "aditional-diagnosis" style=" display:flex;">
+    <div style="flex:1">
+      <p style="margin: 10px;">BP:</p>
+      <p style="margin: 10px;">Weight:</p>
+      <p style="margin: 10px; ">Sugar:</p>
+    </div>  
+    <div style="flex:1">
+        <input  name="bp" class="w3-input w3-border" style="width:80px; height:30px; margin: 5px;" type = "text">
+        <input  name="weight" class="w3-input w3-border" style="width:80px; height:30px; margin: 5px;" type = "text">
+        <input  name="sugar" class="w3-input w3-border" style="width:80px; height:30px; margin: 5px;" type = "text">
+      </div>  
+  </div>
+</div> -->
+
+
+    <h3><b>MEDICINES</b></h3>
+    <div class="input_fields_wrap">
+    <div style="display:flex;">
+      <span  style="flex:1;"><b style="margin-left:25px;">MEDICINE</b></span>
+      <span  style="flex:1;"><b style="margin-left:77px;">M</b><b style="margin-left:57px;">D</b><b style="margin-left:57px;">N</b></span>
+    </div>
+    <div class="medicine-detail" style="display:flex; margin-top: 10px;">
+        <span  style="flex:1;"><input class="w3-input w3-border medicine" type="text" placeholder="Medicine" name="medicine" name="mytext[]" style="margin-left:25px; width: 100%;" id="id_input"></span>
+        <span  style="flex:1;">
+          <input  name="checkbox1[]" type="checkbox" value="1" style="margin-left:77px;">
+          <input  name="checkbox2[]" type="checkbox" value="1" style="margin-left:43px;">
+          <input  name="checkbox3[]" type="checkbox" value="1" style="margin-left:43px;">
+        </span>
+    </div>
+    </div>
+    <button class="add_field_button" style="margin-left:25px; margin-top: 15px; height:25px;" >+</button>
+     
+   <!-- for small screen -->
+   <!-- <div class="input_fields_wrap w3-hide-large">
+    <div style="display:flex;">
+      <span  style="flex:1;"><b style="margin-left:10px;" >MEDICINE</b></span>
+      <span  style="flex:1;"><b style="margin-left:40px;">M</b><b style="margin-left:31px;">D</b><b style="margin-left:35px;">N</b></span>
+    </div>
+    <div class="medicine-detail" style="display:flex; margin-top: 10px;">
+        <span  style="flex:1;"><input class="w3-input w3-border medicine" type="text" placeholder="Medicine" name="medicine" name="mytext[]" style="margin-left:10px; width: 100%;"></span>
+        <span  style="flex:1;">
+          <input  name="checkbox1[]" type="checkbox" value="1" style="margin-left:40px;">
+          <input  name="checkbox2[]" type="checkbox" value="1" style="margin-left:20px;">
+          <input  name="checkbox3[]" type="checkbox" value="1" style="margin-left:20px;">
+        </span>
+    </div>
+    </div>
+    <button class="add_field_button w3-hide-large" style="margin-left:25px; margin-top: 15px; height:25px;" >+</button>
+      -->
+
+
+    
+    <div style="margin-top:20px;">
+      <span style="display:flex;"><h5 style="flex:1;"><b>TESTS</b></h5> <span style="margin-left:10px; flex:5"><input type="checkbox" id="trigger" name="question" style="margin-top:15px;"></span></span>
+    </div>
+    <div id="hidden_fields">
+        <span style="display:flex;"><h5 style="flex:1;">NAME:</h5> <span style="margin-left:10px; flex:5"><input type="text" id="trigger" name="tests" style="margin-top:15px;"></span></span>
+    </div>
+   <input type="submit" value="save and send">
+    </form>
+</div>
+<script>
+$(function() {
+  var checkbox = $("#trigger");
+  var hidden = $("#hidden_fields");
+  var populate = $("#populate");
+  hidden.hide();
+  checkbox.change(function() {
+    if (checkbox.is(':checked')) {
+      hidden.show();
+      populate.val("Dude, this input got populated!");
+    } else {
+      hidden.hide();
+    }
+  });
+});
+$(document).ready(function() {
+  var max_fields      = 10;
+  var wrapper       = $(".input_fields_wrap");
+  var add_button      = $(".add_field_button");
+  
+  var x = 1;
+
+  $(add_button).click(function(e){ 
+    e.preventDefault();
+    if(x < max_fields){ 
+      x++;
+      $(wrapper).append('<div class="medicine-detail" style=" margin-top:10px;"><input required name="medicine" class="w3-input w3-border medicine" type="text" placeholder="Medicine" name="mytext[]" style="margin-right:5px" id="id_input"><input name="checkbox1[]" type = "checkbox" value = "'+x+'"><input name="checkbox2[]" type = "checkbox" value = "'+x+'"><input name="checkbox3[]" type = "checkbox" value = "'+x+'"><button href="#" class="remove_field" style="height:25px; margin-bottom:20px;">-</button></div>');
+      
+  
+    }
+  });
+  
+  $(wrapper).on("click",".remove_field", function(e){
+    e.preventDefault(); $(this).parent('div').remove(); x--;
+  })
+});
+</script>
+
+
+<!-- for auto completion -->
+<script>
+  jQuery(function() {
+  $("#id_input").on('keyup', function(){
+      var value = $(this).val();
+      value = value.toLowerCase();
+      $.ajax({
+          url: "/patient_prescriptions/ajax/1",
+          data: {
+            'search': value
+          },
+          dataType: 'json',
+          success: function (data) {
+              list = data.list;
+              $("#id_input").autocomplete({
+              source: list,
+              minLength: 1
+              });
+          }
+      });
+  });
+});
+  </script>
+{% endblock %}
